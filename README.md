@@ -1,7 +1,9 @@
 ## Usage
-concurrent: number of threads running a request
-recursion: how many times requests are made (R*C) 
-delay: time between requests 
+**concurrent**: number of threads running a request
+**recursion**: how many times requests are made (R*C) 
+**delay**: time between requests
+
+The results are saved (in milliseconds) in `times.csv`.
 ```text
 Usage: web_wacker [OPTIONS] --url <URL>
 
