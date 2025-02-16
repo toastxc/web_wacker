@@ -11,6 +11,7 @@ Options:
   -c, --concurrent <CONCURRENT>  [default: 10]
   -r, --recursion <RECURSION>    [default: 1]
   -d, --delay <DELAY>            [default: 1]
+  -t, --timeout <TIMEOUT>        [default: 10]
   -u, --url <URL>                
   -h, --help                     Print help
   -V, --version                  Print version

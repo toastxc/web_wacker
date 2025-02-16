@@ -12,6 +12,9 @@ struct Args {
     #[arg(short, long, default_value_t = 1)]
     delay: u64,
 
+    #[arg(short, long, default_value_t = 10)]
+    timeout: u64,
+
     #[arg(short, long)]
     url: String,
 }
@@ -58,7 +61,7 @@ async fn spawn2(args: Arc<Args>) -> Vec<Result<(Duration, Response), anyhow::Err
                 async move { inner(args).await }
             })
         })
-        .buffer_unordered(args.concurrent as usize)
+        .buffered(args.concurrent as usize)
         .collect::<Vec<_>>()
         .await
         .into_iter()
@@ -72,9 +75,13 @@ async fn spawn2(args: Arc<Args>) -> Vec<Result<(Duration, Response), anyhow::Err
 type Data = (Duration, Result<Response, reqwest::Error>);
 
 async fn inner(args: Arc<Args>) -> Data {
+    let request = reqwest::Client::new()
+        .request(reqwest::Method::GET, args.url.clone())
+        .timeout(Duration::from_secs(args.timeout.clone()));
+
     let then = SystemTime::now();
-    let request = reqwest::get(args.url.clone()).await;
-    let elapsed = then.elapsed().unwrap();
+    let request = request.send().await;
+    let elapsed = then.elapsed().unwrap_or_default();
 
     (elapsed, request)
 }
